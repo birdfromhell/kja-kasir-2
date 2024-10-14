@@ -51,12 +51,7 @@ Route::get('/', function () {
 Route::get('/app/dashboard', [UsersController::class, 'home'])->name('home')->middleware(['auth', 'verified']);
 Route::get('/app/user/login', [UsersController::class, 'login'])->name('login');
 
-//Route::post('/loginuser', [UsersController::class, 'loginUser']);
-
-Route::get('forget-password', function () {
-    return view('account.forget-password');
-
-});
+Route::post('/loginuser', [UsersController::class, 'loginUser']);
 
 Route::post('/app/user/login', [UsersController::class, 'loginUser']);
 
@@ -113,14 +108,12 @@ Route::group(['middleware' => 'auth', 'verified'], function () {
     Route::get('/setting/set/{id}', [UsersController::class, 'Aplikasiset']);
     Route::get('/setting', [UsersController::class, 'settingAplikasi']);
     //barang
-    Route::get('/app/barang', [BarangController::class, 'index']);
-
-    Route::get('/app/barang/edit/{id}', [BarangController::class, 'edit'])->name('barang.edit');
+    Route::get('/barang', [BarangController::class, 'index']);
+    Route::post('/barang-insert', [BarangController::class, 'store']);
+    Route::get('/barang-edit/{id}', [BarangController::class, 'edit']);
     Route::post('/barang-update/{id}', [BarangController::class, 'update']);
-    
-    Route::delete('/app/barang/delete/{id}', [BarangController::class, 'destroy'])->name('barang.delete');
-    Route::get('/barang/create', [BarangController::class, 'create'])->name('barang.create');
-
+    Route::get('/barang-delete/{id}', [BarangController::class, 'destroy']);
+    Route::get('/barang-print', [BarangController::class, 'print']);
 
     //kategori
     Route::get('/kategori', [KategoriController::class, 'index']);
@@ -130,14 +123,12 @@ Route::group(['middleware' => 'auth', 'verified'], function () {
     Route::get('/kategori-delete/{id}', [KategoriController::class, 'destroy']);
 
     //kelompok
-    Route::get('/app/kelompok', [KelompokController::class, 'index'])->name('kelompok.index'); // Halaman daftar
-    Route::get('/app/kelompok/create', [KelompokController::class, 'create'])->name('kelompok.create'); // Halaman tambah
-    Route::post('/kelompok-insert', [KelompokController::class, 'store'])->name('kelompok.store'); // Proses tambah
-    Route::get('/app/kelompok/edit/{id}', [KelompokController::class, 'edit'])->name('kelompok.edit'); // Halaman edit
-    Route::put('/kelompok-update/{id}', [KelompokController::class, 'update'])->name('kelompok.update');
+    Route::get('/kelompok', [KelompokController::class, 'index']);
+    Route::post('/kelompok-insert', [KelompokController::class, 'store']);
+    Route::get('/kelompok-edit/{id}', [KelompokController::class, 'edit']);
+    Route::post('/kelompok-update/{id}', [KelompokController::class, 'update']);
+    Route::get('/kelompok-delete/{id}', [KelompokController::class, 'destroy']);
 
-    Route::delete('/app/kelompok/delete/{id}', [KelompokController::class, 'destroy']); // Proses hapus
-    
     //akun
     Route::get('/akun', [AkunController::class, 'akun']);
     Route::get('/akun/filter', [AkunController::class, 'akunfilter']);
@@ -149,11 +140,9 @@ Route::group(['middleware' => 'auth', 'verified'], function () {
     Route::get('/app/relasi', [PerusahaanController::class, 'index']);
     Route::get('/tambahrelasi', [PerusahaanController::class, 'create']);
     Route::post('/relasi-insert', [PerusahaanController::class, 'store']);
-    Route::delete('/app/relasi/delete/{id}', [PerusahaanController::class, 'destroy']);
-
+    Route::get('/app/relasi/delete/{id}', [PerusahaanController::class, 'destroy']);
     Route::get('/app/relasi/edit/{id}', [PerusahaanController::class, 'edit']);
     Route::post('/relasi-update/{id}', [PerusahaanController::class, 'update']);
-
 
     //akun
     // Route::get('/profile', [PerusahaanController::class, 'profile']);
@@ -304,8 +293,6 @@ Route::group(['middleware' => 'auth', 'verified'], function () {
 
     Route::get('/cash-opnem', [CashOpnameController::class, 'data']);
     Route::post('/cash-opnem/update', [CashOpnameController::class, 'update']);
-   
-
 
     Route::get('/cash-opnem/print', [CashOpnameController::class, 'print']);
     // });

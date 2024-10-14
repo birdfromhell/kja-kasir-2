@@ -72,38 +72,18 @@
                                 <div class="card-inner p-0">
                                     <div class="nk-tb-list">
                                         <div class="nk-tb-item nk-tb-head">
-                                            <div class="nk-tb-col nk-tb-col-check">
-                                                <div class="custom-control custom-control-sm custom-checkbox notext">
-                                                    <input type="checkbox" class="custom-control-input" id="pid">
-                                                    <label class="custom-control-label" for="pid"></label>
-                                                </div>
-                                            </div>
+                                            <div class="nk-tb-col"><span>#</span></div>
                                             <div class="nk-tb-col tb-col-sm"><span>Kode Kategori</span></div>
                                             <div class="nk-tb-col"><span>Kategori Barang</span></div>
                                             <div class="nk-tb-col"><span>Aksi</span></div>
-                                            <div class="nk-tb-col nk-tb-col-tools">
-                                                <ul class="nk-tb-actions gx-1 my-n1">
-                                                    <li class="mr-n1">
-{{--                                                        <div class="dropdown">--}}
-{{--                                                            <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>--}}
-{{--                                                            <div class="dropdown-menu dropdown-menu-right">--}}
-{{--                                                                <ul class="link-list-opt no-bdr">--}}
-{{--                                                                    <li><a href="#"><em class="icon ni ni-edit"></em><span>Edit Selected</span></a></li>--}}
-{{--                                                                    <li><a href="#"><em class="icon ni ni-trash"></em><span>Remove Selected</span></a></li>--}}
-{{--                                                                </ul>--}}
-{{--                                                            </div>--}}
-{{--                                                        </div>--}}
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div><!-- .nk-tb-item -->
+                                        </div>
+                                        @php
+                                            $no = 1;
+                                        @endphp
                                         @foreach ($data as $row)
                                             <div class="nk-tb-item">
-                                                <div class="nk-tb-col nk-tb-col-check">
-                                                    <div class="custom-control custom-control-sm custom-checkbox notext">
-                                                        <input type="checkbox" class="custom-control-input" id="pid{{ $row->id }}">
-                                                        <label class="custom-control-label" for="pid{{ $row->id }}"></label>
-                                                    </div>
+                                                <div class="nk-tb-col">
+                                                    <span>{{ $no++ }}</span>
                                                 </div>
                                                 <div class="nk-tb-col tb-col-sm">
                                                     <span class="tb-product">
@@ -123,7 +103,7 @@
                                                         </li>
                                                     </ul>
                                                 </div>
-                                            </div><!-- .nk-tb-item -->
+                                            </div>
                                         @endforeach
                                     </div>
                                 </div>
@@ -168,50 +148,93 @@
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
                     <script>
                         $(document).ready(function() {
-                            $(".edit-link").click(function(event) {
-                                event.preventDefault();
-                                var editUrl = $(this).attr("href");
+                            $('.btn-edit').click(function(e) {
+                                e.preventDefault();
+                                var url = $(this).attr('href');
+
                                 Swal.fire({
-                                    title: "Are you sure you want to edit?",
-                                    icon: "question",
+                                    title: 'Edit Data?',
+                                    text: "Apakah Anda ingin mengedit data ini?",
+                                    icon: 'question',
                                     showCancelButton: true,
-                                    confirmButtonText: "Yes"
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Edit'
                                 }).then((result) => {
                                     if (result.isConfirmed) {
-                                        window.location.href = editUrl;
+                                        window.location.href = url;
                                     }
                                 });
                             });
 
-                            $(".delete-link").click(function(event) {
-                                event.preventDefault();
-                                var deleteUrl = $(this).attr("href");
+                            $('.btn-delete').click(function(e) {
+                                e.preventDefault();
+                                var url = $(this).attr('href');
+
                                 Swal.fire({
-                                    title: "Are you sure you want to delete?",
-                                    text: "You won't be able to revert this!",
-                                    icon: "warning",
+                                    title: 'Hapus Data?',
+                                    text: "Apakah Anda yakin ingin menghapus data ini?",
+                                    icon: 'warning',
                                     showCancelButton: true,
-                                    confirmButtonColor: "#d33",
-                                    confirmButtonText: "Yes, delete it!"
+                                    confirmButtonColor: '#d33',
+                                    cancelButtonColor: '#3085d6',
+                                    confirmButtonText: 'Hapus'
                                 }).then((result) => {
                                     if (result.isConfirmed) {
                                         $.ajax({
-                                            url: deleteUrl,
-                                            type: "GET",
+                                            url: url,
+                                            type: 'DELETE',
+                                            headers: {
+                                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                            },
                                             success: function(response) {
-                                                Swal.fire({
-                                                    title: "Deleted!",
-                                                    text: "The category has been deleted.",
-                                                    icon: "success"
-                                                }).then((value) => {
+                                                Swal.fire(
+                                                    'Terhapus!',
+                                                    'Data telah dihapus.',
+                                                    'success'
+                                                ).then((value) => {
                                                     location.reload();
                                                 });
                                             },
                                             error: function(xhr, status, error) {
+                                                Swal.fire(
+                                                    'Error!',
+                                                    'Gagal menghapus data: ' + error,
+                                                    'error'
+                                                );
+                                            }
+                                        });
+                                    }
+                                });
+                            });
+
+                            $("#btnTambahAkun").click(function() {
+                                Swal.fire({
+                                    title: "Apakah Anda yakin?",
+                                    text: "Anda akan menambah kategori!",
+                                    icon: "warning",
+                                    buttons: true,
+                                    dangerMode: true,
+                                }).then((willAdd) => {
+                                    if (willAdd) {
+                                        $.ajax({
+                                            url: "/kategori-insert",
+                                            type: "POST",
+                                            data: $("#formTambahKategori").serialize(),
+                                            success: function(response) {
                                                 Swal.fire({
-                                                    title: "Error!",
-                                                    text: "Failed to delete the category: " + error,
-                                                    icon: "error"
+                                                    title: 'Sukses',
+                                                    icon: 'success',
+                                                    text: 'Kategori berhasil ditambahkan!'
+                                                }).then((value) => {
+                                                    window.location.href = "/kategori";
+                                                });
+                                            },
+                                            error: function(xhr, status, error) {
+                                                Swal.fire({
+                                                    title: 'Error',
+                                                    text: 'Gagal menambah kategori: ' + error,
+                                                    icon: 'error'
                                                 });
                                                 console.error(xhr.responseText);
                                             }
@@ -220,9 +243,7 @@
                                 });
                             });
                         });
-                    </script>
 
-                    <script>
                         function filterTable() {
                             var input, filter, table, tr, td, i, txtValue;
                             input = document.getElementById("search");

@@ -25,7 +25,7 @@ class UsersController extends Controller
     public function login()
     {
         try {
-            return view('account.login');
+            return view('account.login1');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error loading login view.');
         }
@@ -34,7 +34,7 @@ class UsersController extends Controller
     public function register()
     {
         try {
-            return view('account.register');
+            return view('account.register1');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error loading register view.');
         }

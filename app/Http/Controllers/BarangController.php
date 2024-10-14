@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Barang;
 use App\Models\Kategori;
 use App\Models\Kelompok;
+use App\Models\Perusahaan;
+use App\Models\PurchaseOrder;
+use App\Models\User;
 use App\Repository\Barang\BarangRepository;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class BarangController extends Controller
 {
@@ -20,20 +24,21 @@ class BarangController extends Controller
     public function index()
     {
         try {
-            $userBarang = $this->barangRepository->index();
-            $kategori = Kategori::all();
-            $kelompokOptions = Kelompok::all();
-
-            return view('barang.barang', compact('userBarang', 'kelompokOptions', 'kategori'));
+            $id = auth()->user();
+            $ids = $id->id;
+            return $this->barangRepository->index($ids);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 400);
         }
     }
 
     public function create()
     {
-        $kelompok = Kelompok::all();
-        return view('barang.create', compact('kelompok'));
+        try {
+            return $this->barangRepository->create();
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 
     public function store(Request $request)
@@ -44,63 +49,47 @@ class BarangController extends Controller
             'kategori' => 'required|string',
             'kelompok' => 'required|string',
             'harga_beli' => 'required|numeric',
-            'perusahaan' => 'required|string', // Tambahkan ini jika perlu
+            'perusahaan' => 'required|string',
         ]);
 
         try {
-            return $this->barangRepository->store($validatedData);
+            return $this->barangRepository->store($request);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 400);
         }
     }
 
     public function edit($id)
     {
-        $barang = Barang::with(['kategori', 'kelompok'])->find($id);
-        if (!$barang) {
-            return redirect()->back()->with('error', 'Barang tidak ditemukan.');
+        try {
+            return $this->barangRepository->edit($id);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
         }
-    
-        $kelompok = Kelompok::all();
-        $kategori = Kategori::all();
-    
-        return view('barang.edit', compact('barang', 'kelompok', 'kategori'));
     }
-    
-
 
     public function update($id, Request $request)
-{
-    $validatedData = $request->validate([
-        'nama_barang' => 'required|string',
-        'satuan' => 'required|string',
-        'kategori_id' => 'required|integer',
-        'kelompok_id' => 'required|integer',
-        'harga_beli' => 'required|numeric',
-    ]);
+    {
+        $validatedData = $request->validate([
+            'nama_barang' => 'required|string',
+            'satuan' => 'required|string',
+            'kategori' => 'required|string',
+            'kelompok' => 'required|string',
+            'harga_beli' => 'required|numeric',
+            'perusahaan' => 'required|string',
+        ]);
 
-    try {
-        // Panggil metode update dari repository
-        $this->barangRepository->update($id, $validatedData);
-        
-        // Redirect ke halaman barang dengan pesan sukses
-        return redirect()->route('barang.index')->with('success', 'Barang berhasil diperbarui!');
-    } catch (\Exception $e) {
-        \Log::error('Update failed: ' . $e->getMessage()); // Log error
-        return redirect()->back()->with('error', 'Gagal memperbarui barang: ' . $e->getMessage());
+        try {
+            return $this->barangRepository->update($id, $validatedData);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
-}
-
-    
-    
 
     public function destroy($id)
     {
         try {
-            $data = Barang::findOrFail($id);
-            $barang = $data->nama_barang;
-            $data->delete();
-            return response()->json(['success' => 'Barang <strong>' . $barang . '</strong> telah dihapus.']);
+            return $this->barangRepository->destroy($id);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
@@ -132,7 +121,6 @@ class BarangController extends Controller
             'phisik' => 'required|integer',
             'ket' => 'required|string',
         ]);
-
         try {
             return $this->barangRepository->sobarangupdate($validatedData);
         } catch (\Exception $e) {
