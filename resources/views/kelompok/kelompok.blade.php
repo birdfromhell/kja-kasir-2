@@ -66,7 +66,7 @@
                                                         <button class="btn btn-primary btn-sm" onclick="window.location.href='{{ url('app/kelompok/edit/' . $kelompok->id) }}'">
                                                             <em class="icon ni ni-edit"></em>
                                                         </button>
-                                                        
+
                                                         <form action="{{ url('/app/kelompok/delete/' . $kelompok->id) }}" method="POST" style="display: inline;" class="delete-form">
                                                             @csrf
                                                             @method('DELETE')
@@ -86,7 +86,7 @@
                     </div>
 
                     {{-- Uncomment this if you have a modal for adding items --}}
-                    {{-- @include('kelompok.create') <!-- Include Modal Here --> --}}
+                     @include('kelompok.create') <!-- Include Modal Here -->
 
                 </div>
             </div>
