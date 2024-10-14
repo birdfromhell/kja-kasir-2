@@ -80,6 +80,7 @@
                                             </div>
                                             <div class="nk-tb-col tb-col-sm"><span>Kode Kategori</span></div>
                                             <div class="nk-tb-col"><span>Kategori Barang</span></div>
+                                            <div class="nk-tb-col"><span>Aksi</span></div>
                                             <div class="nk-tb-col nk-tb-col-tools">
                                                 <ul class="nk-tb-actions gx-1 my-n1">
                                                     <li class="mr-n1">
@@ -115,15 +116,10 @@
                                                 <div class="nk-tb-col nk-tb-col-tools">
                                                     <ul class="nk-tb-actions gx-1 my-n1">
                                                         <li class="mr-n1">
-                                                            <div class="dropdown">
-                                                                <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
-                                                                <div class="dropdown-menu dropdown-menu-right">
-                                                                    <ul class="link-list-opt no-bdr">
-                                                                        <li><a href="/kategori-edit/{{ $row->id }}"><em class="icon ni ni-edit"></em><span>Edit</span></a></li>
-                                                                        <li><a href="/kategori-delete/{{ $row->id }}"><em class="icon ni ni-trash"></em><span>Delete</span></a></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
+                                                            <a href="/kategori-edit/{{ $row->id }}" class="btn btn-icon btn-trigger"><em class="icon ni ni-edit"></em></a>
+                                                        </li>
+                                                        <li class="mr-n1">
+                                                            <a href="/kategori-delete/{{ $row->id }}" class="btn btn-icon btn-trigger"><em class="icon ni ni-trash"></em></a>
                                                         </li>
                                                     </ul>
                                                 </div>
