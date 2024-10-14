@@ -29,7 +29,7 @@ class PerusahaanController extends Controller
 
     public function create()
     {
-        return view('relasi.edit');
+        return view('relasi.create');
     }
 
     public function store(Request $request)
@@ -45,17 +45,12 @@ class PerusahaanController extends Controller
                 'plafon_debit' => 'nullable',
                 'plafon_kredit' => 'nullable',
             ]);
-    
-            // Simpan data perusahaan
-            Perusahaan::create($validatedData);
-    
-            // Redirect dengan pesan sukses
-            return redirect('/app/relasi')->with('success', 'Perusahaan berhasil ditambahkan.');
+
+            return $this->perusahaanRepository->store($validatedData);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
-    
 
     public function edit($id)
     {
@@ -68,37 +63,23 @@ class PerusahaanController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function update($id, Request $request)
     {
-        $validated = $request->validate([
-            'nama_perusahaan' => 'required|string|max:255',
-            'alamat_kantor' => 'required|string',
-            'alamat_gudang' => 'required|string',
-            'nama_pimpinan' => 'required|string|max:255',
-            'no_telepon' => 'required|string',
-            'plafon_debit' => 'nullable|numeric',
-            'plafon_kredit' => 'nullable|numeric',
-        ]);
-    
-        $perusahaan = Perusahaan::findOrFail($id);
-        $perusahaan->update($validated);
-    
-        return response()->json(['message' => 'Perusahaan berhasil diperbarui!']);
- 
-}
-
-
-public function destroy($id)
-{
-    try {
-        $perusahaan = Perusahaan::findOrFail($id); // Ini akan memicu error jika tidak ditemukan
-        $perusahaan->delete();
-        return redirect('/app/relasi')->with('success', 'Perusahaan berhasil dihapus.');
-    } catch (\Exception $e) {
-        return redirect('/app/relasi')->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        try {
+            return $this->perusahaanRepository->update($id, $request);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
-}
 
+    public function destroy($id)
+    {
+        try {
+            return $this->perusahaanRepository->destroy($id);
+        } catch (\Exception $e) {
+            return redirect('/relasi')->with('error', 'Error deleting perusahaan.');
+        }
+    }
 
     public function profile()
     {

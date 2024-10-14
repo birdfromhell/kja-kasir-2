@@ -5,61 +5,98 @@ namespace App\Http\Controllers;
 use App\Models\Kelompok;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreKelompokRequest;
+use App\Http\Requests\UpdateKelompokRequest;
 use App\Repository\Kelompok\KelompokRepository;
 
 class KelompokController extends Controller
 {
-    protected $kelompokRepository;
+    /**
+     * Display a listing of the resource.
+     */
 
+     protected $kelompokRepository;
     public function __construct(KelompokRepository $kelompokRepository)
     {
         $this->kelompokRepository = $kelompokRepository;
     }
-
     public function index()
     {
-        $kelompokData = $this->kelompokRepository->getPaginatedKelompok();
-        return view('kelompok.kelompok', compact('kelompokData'));
-    }
+        try {
+            $kelompokData = Kelompok::paginate(15);
+            $kategoriData = Kategori::all();
 
-    public function create()
-    {
-        return view('kelompok.create'); // Pastikan view ini ada
+            return view('kelompok.kelompok', compact('kelompokData', 'kategoriData'));
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'kode_kategori' => 'required|string',
-            'kelompok_barang' => 'required|string',
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'kode_kategori' => 'required|string',
+                'kelompok_barang' => 'required|string',
+            ]);
+            // Simpan data kelompok ke dalam database menggunakan model
+            $kelompok = new Kelompok();
+            $kelompok->kode_kategori = $validatedData['kode_kategori'];
+            $kelompok->kelompok_barang = $validatedData['kelompok_barang'];
 
-        $this->kelompokRepository->store($validatedData);
+            // Simpan data ke database
+            $kelompok->save();
 
-        return redirect()->route('kelompok.index')->with('success', 'Kelompok berhasil ditambahkan.');
+            // Redirect ke halaman lain atau tampilkan pesan sukses jika diperlukan
+            return redirect('/kelompok')->with('success', 'Kategori Barang <strong>' . $validatedData['kelompok_barang'] . '</strong> berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 
     public function edit($id)
     {
-        $kelompok = $this->kelompokRepository->find($id);
-        return view('kelompok.edit', compact('kelompok')); // Pastikan view ini ada
+        try {
+            $kelompokData = Kelompok::find($id);
+            $kategoriData = Kategori::all();
+            return view('kelompok.edit', compact('kelompokData', 'kategoriData'));
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
-    public function update(Request $request, $id)
+
+    public function update($id, Request $request)
     {
-        $validatedData = $request->validate([
-            'kode_kategori' => 'required|string',
-            'kelompok_barang' => 'required|string',
-        ]);
-    
-        $kelompok = $this->kelompokRepository->find($id); // Pastikan Anda memiliki metode find di repository
-        $kelompok->update($validatedData); // Pastikan model mendukung update
-    
-        return redirect()->route('kelompok.index')->with('success', 'Kelompok berhasil diperbarui.');
+        try {
+            $data = Kelompok::find($id);
+
+            // Validasi data yang dikirim dari form
+            $validatedData = $request->validate([
+                'kode_kategori' => 'required|string',
+                'kelompok_barang' => 'required|string',
+            ]);
+
+            $data->update($validatedData);
+            $kelompok = $data->kelompok_barang;
+
+            return redirect('/kelompok')->with('update', 'Kategori Barang <strong>' . $kelompok . '</strong> berhasil diupdate.');
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
-    
+
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroy($id)
     {
-        $this->kelompokRepository->delete($id);
-        return redirect()->route('kelompok.index')->with('success', 'Kelompok berhasil dihapus.');
+        try {
+            $data = Kelompok::find($id);
+            $data->delete();
+            $kelompok = $data->kelompok_barang;
+            return redirect('/kelompok')->with('delete', 'Kategori Barang <strong>' . $kelompok . '</strong> berhasil dihapus.');
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 }

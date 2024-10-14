@@ -53,7 +53,7 @@
                                 <a href="{{ url('app/relasi') }}" class="nk-menu-link"><span class="nk-menu-text">Daftar Relasi</span></a>
                             </li>
                             <li class="nk-menu-item">
-                                <a href="{{ url('app/barang')}}" class="nk-menu-link"><span class="nk-menu-text">Daftar Barang</span></a>
+                                <a href="{{ url('barang')}}" class="nk-menu-link"><span class="nk-menu-text">Daftar Barang</span></a>
                             </li>
                             <li class="nk-menu-item">
                                 <a href="{{ url('kategori')}}" class="nk-menu-link"><span class="nk-menu-text">Daftar Kategori</span></a>
