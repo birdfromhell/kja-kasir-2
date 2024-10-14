@@ -27,7 +27,7 @@ class BukuBesarRepository
             // Add this line to get the previous no_bukubesar
             $previousNoBukuBesar = BukuBesar::orderBy('no_bukubesar', 'desc')->value('no_bukubesar');
 
-            return view('bukubesar.view', compact('data', 'tipe', 'BukuBesar', 'previousNoBukuBesar', 'bukubesar'));
+            return view('bukubesar.bukubesar', compact('data', 'tipe', 'BukuBesar', 'previousNoBukuBesar', 'bukubesar'));
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }

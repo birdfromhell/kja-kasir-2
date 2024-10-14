@@ -160,10 +160,10 @@ Route::group(['middleware' => 'auth', 'verified'], function () {
     Route::get('/checkbox', [UjiCobaController::class, 'checkbox']);
 
     //buku besar ma
-    Route::get('/bukuBesar', [BukuBesarController::class, 'index']);
-    Route::get('/bukuBesar/edit/{id}', [BukuBesarController::class, 'edit']);
-    Route::post('/bukuBesar/insert', [BukuBesarController::class, 'insert']);
-    Route::post('/bukuBesar/update/{id}', [BukuBesarController::class, 'update']);
+    Route::get('/bukubesar', [BukuBesarController::class, 'index']);
+    Route::get('/bukubesar/edit/{id}', [BukuBesarController::class, 'edit']);
+    Route::post('/bukubesar/insert', [BukuBesarController::class, 'insert']);
+    Route::post('/bukubesar/update/{id}', [BukuBesarController::class, 'update']);
     Route::get('/dataSJ/{status}/{id}', [SuratJalanController::class, 'status']);
 
 
