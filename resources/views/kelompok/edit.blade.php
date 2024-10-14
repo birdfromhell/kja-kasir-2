@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="iq-card">
                 <div class="iq-card-header d-flex justify-content-between">
-                    <div class="iq-header-title">
+                     <div class="iq-header-title">
                         <h4 class="card-title">Edit Kelompok</h4>
                     </div>
                 </div>
