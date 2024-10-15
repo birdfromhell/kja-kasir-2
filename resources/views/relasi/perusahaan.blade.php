@@ -46,31 +46,67 @@
                         <div class="card card-bordered">
                             <div class="card-inner-group">
                                 <div class="card-inner p-0">
-                                    <table class="table">
-                                        <thead class="thead-light">
-                                            <tr style="background-color: #d3d3d3; color: #000000;">
-                                                <th>#</th>
-                                                <th>Nama Perusahaan</th>
-                                                <th>Jenis</th>
-                                                <th>Alamat Kantor</th>
-                                                <th>Alamat Gudang</th>
-                                                <th>Nama Pimpinan</th>
-                                                <th>No. Telepon</th>
-                                                <th>Plafon Kredit/Debit</th>
-                                                <th>Aksi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($data as $row)
-                                                <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td><strong>{{ $row->nama_perusahaan }}</strong></td>
-                                                    <td>{{ $row->jenis }}</td>
-                                                    <td>{{ $row->alamat_kantor }}</td>
-                                                    <td>{{ $row->alamat_gudang }}</td>
-                                                    <td>{{ $row->nama_pimpinan }}</td>
-                                                    <td>{{ $row->no_telepon }}</td>
-                                                    <td>
+                                    <div class="nk-tb-list">
+                                        <div class="nk-tb-item nk-tb-head">
+                                            <div class="nk-tb-col nk-tb-col-check">
+                                                <div class="custom-control custom-control-sm custom-checkbox notext">
+                                                    <input type="checkbox" class="custom-control-input" id="pid">
+                                                    <label class="custom-control-label" for="pid"></label>
+                                                </div>
+                                            </div>
+                                            <div class="nk-tb-col tb-col-sm"><span>Nama Perusahaan</span></div>
+                                            <div class="nk-tb-col"><span>Jenis</span></div>
+                                            <div class="nk-tb-col"><span>Alamat Kantor</span></div>
+                                            <div class="nk-tb-col"><span>Alamat Gudang</span></div>
+                                            <div class="nk-tb-col"><span>Nama Pimpinan</span></div>
+                                            <div class="nk-tb-col"><span>No. Telepon</span></div>
+                                            <div class="nk-tb-col"><span>Plafon Kredit/Debit</span></div>
+                                            <div class="nk-tb-col nk-tb-col-tools">
+                                                <ul class="nk-tb-actions gx-1 my-n1">
+                                                    <li class="mr-n1">
+                                                        <div class="dropdown">
+                                                            <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <ul class="link-list-opt no-bdr">
+                                                                    <li><a href="#"><em class="icon ni ni-edit"></em><span>Edit Selected</span></a></li>
+                                                                    <li><a href="#"><em class="icon ni ni-trash"></em><span>Remove Selected</span></a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div><!-- .nk-tb-item -->
+                                        @foreach ($data as $row)
+                                            <div class="nk-tb-item">
+                                                <div class="nk-tb-col nk-tb-col-check">
+                                                    <div class="custom-control custom-control-sm custom-checkbox notext">
+                                                        <input type="checkbox" class="custom-control-input" id="pid{{ $row->id }}">
+                                                        <label class="custom-control-label" for="pid{{ $row->id }}"></label>
+                                                    </div>
+                                                </div>
+                                                <div class="nk-tb-col tb-col-sm">
+                                                    <span class="tb-product">
+                                                        <span class="title">{{ $row->nama_perusahaan }}</span>
+                                                    </span>
+                                                </div>
+                                                <div class="nk-tb-col">
+                                                    <span class="tb-sub">{{ $row->jenis }}</span>
+                                                </div>
+                                                <div class="nk-tb-col">
+                                                    <span class="tb-sub">{{ $row->alamat_kantor }}</span>
+                                                </div>
+                                                <div class="nk-tb-col">
+                                                    <span class="tb-sub">{{ $row->alamat_gudang }}</span>
+                                                </div>
+                                                <div class="nk-tb-col">
+                                                    <span class="tb-sub">{{ $row->nama_pimpinan }}</span>
+                                                </div>
+                                                <div class="nk-tb-col">
+                                                    <span class="tb-sub">{{ $row->no_telepon }}</span>
+                                                </div>
+                                                <div class="nk-tb-col">
+                                                    <span class="tb-sub">
                                                         @if ($row->jenis == 'Supplier')
                                                             Rp {{ $row->plafon_debit }} (Debit)
                                                         @elseif ($row->jenis == 'Konsumen')
@@ -78,24 +114,25 @@
                                                         @else
                                                             -
                                                         @endif
-                                                    </td>
-                                                    <td>
-                                                        <button class="btn btn-primary btn-sm" onclick="window.location.href='{{ url('app/relasi/edit/' . $row->id) }}'">
-                                                            <em class="icon ni ni-edit"></em>
-                                                        </button>
-                                                        <form action="{{ url('/app/relasi/delete/' . $row->id) }}" method="POST" style="display: inline;" class="delete-form">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="button" class="btn btn-danger btn-sm delete-button">
-                                                                <em class="icon ni ni-trash"></em>
-                                                            </button>
-                                                        </form>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                    {{ $data->links() }}
+                                                    </span>
+                                                </div>
+                                                <div class="nk-tb-col nk-tb-col-tools">
+                                                    <ul class="nk-tb-actions gx-1 my-n1">
+                                                        <li class="mr-n1">
+                                                            <a href="{{ url('app/relasi/edit/' . $row->id) }}" class="btn btn-icon btn-trigger"><em class="icon ni ni-edit"></em></a>
+                                                        </li>
+                                                        <li class="mr-n1">
+                                                            <form action="{{ url('/app/relasi/delete/' . $row->id) }}" method="POST" style="display: inline;" class="delete-form">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="button" class="btn btn-icon btn-trigger delete-button"><em class="icon ni ni-trash"></em></button>
+                                                            </form>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div><!-- .nk-tb-item -->
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
                         </div>

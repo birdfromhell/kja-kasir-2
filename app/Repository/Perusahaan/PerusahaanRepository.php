@@ -27,7 +27,7 @@ class PerusahaanRepository
 
     public function create()
     {
-        return view('relasi.edit');
+        return view('relasi.create');
     }
 
     public function store($validatedData)
@@ -58,18 +58,56 @@ class PerusahaanRepository
     {
         try {
             $data = Perusahaan::find($id);
-            $validatedData = $request->validate([
-                'nama_perusahaan' => 'required',
-                'alamat_kantor' => 'required',
-                'alamat_gudang' => 'required',
-                'nama_pimpinan' => 'required',
-                'no_telepon' => 'required',
-                'plafon_debit' => 'nullable',
-                'plafon_kredit' => 'nullable',
-            ]);
-            $validatedData['updated_at'] = now()->addHours(7);
-            $data->update($validatedData);
-            return redirect('/app/relasi')->with('update', 'Perusahaan <strong>' . $data->nama_perusahaan . '</strong> berhasil diupdate.');
+            $perusahaan = $data->nama_perusahaan;
+
+            if ($data->jenis == 'Developer') {
+                // Validasi data yang dikirim dari form
+                $validatedData = $request->validate([
+                    'nama_perusahaan' => 'required',
+                    'alamat_kantor' => 'required',
+                    'alamat_gudang' => 'required',
+                    'nama_pimpinan' => 'required',
+                    'no_telepon' => 'required',
+                    // 'plafon_debit' => 'required',
+                ]);
+
+                // Menambah field updated_at dengan waktu sekarang + 7 jam
+                $validatedData['updated_at'] = now()->addHours(7);
+
+                $data->update($validatedData);
+            } else if ($data->jenis == 'Supplier') {
+                // Validasi data yang dikirim dari form
+                $validatedData = $request->validate([
+                    'nama_perusahaan' => 'required',
+                    'alamat_kantor' => 'required',
+                    'alamat_gudang' => 'required',
+                    'nama_pimpinan' => 'required',
+                    'no_telepon' => 'required',
+                    // 'plafon_debit' => 'required',
+                ]);
+
+                // Menambah field updated_at dengan waktu sekarang + 7 jam
+                $validatedData['updated_at'] = now()->addHours(7);
+
+                $data->update($validatedData);
+            } else if ($data->jenis == 'Konsumen') {
+                // Validasi data yang dikirim dari form
+                $validatedData = $request->validate([
+                    'nama_perusahaan' => 'required',
+                    'alamat_kantor' => 'required',
+                    'alamat_gudang' => 'required',
+                    'nama_pimpinan' => 'required',
+                    'no_telepon' => 'required',
+                    // 'plafon_kredit' => 'required',
+                ]);
+
+                // Menambah field updated_at dengan waktu sekarang + 7 jam
+                $validatedData['updated_at'] = now()->addHours(7);
+
+                $data->update($validatedData);
+            }
+
+            return redirect('/app/relasi')->with('update', 'Perusahaan <strong>' . $perusahaan . '</strong> berhasil diupdate.');
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }

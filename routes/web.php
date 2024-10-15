@@ -117,7 +117,7 @@ Route::group(['middleware' => 'auth', 'verified'], function () {
 
     Route::get('/app/barang/edit/{id}', [BarangController::class, 'edit'])->name('barang.edit');
     Route::post('/barang-update/{id}', [BarangController::class, 'update']);
-    
+
     Route::delete('/app/barang/delete/{id}', [BarangController::class, 'destroy'])->name('barang.delete');
     Route::get('/barang/create', [BarangController::class, 'create'])->name('barang.create');
 
@@ -137,7 +137,7 @@ Route::group(['middleware' => 'auth', 'verified'], function () {
     Route::put('/kelompok-update/{id}', [KelompokController::class, 'update'])->name('kelompok.update');
 
     Route::delete('/app/kelompok/delete/{id}', [KelompokController::class, 'destroy']); // Proses hapus
-    
+
     //akun
     Route::get('/akun', [AkunController::class, 'akun']);
     Route::get('/akun/filter', [AkunController::class, 'akunfilter']);
@@ -171,10 +171,10 @@ Route::group(['middleware' => 'auth', 'verified'], function () {
     Route::get('/checkbox', [UjiCobaController::class, 'checkbox']);
 
     //buku besar ma
-    Route::get('/bukuBesar', [BukuBesarController::class, 'index']);
-    Route::get('/bukuBesar/edit/{id}', [BukuBesarController::class, 'edit']);
-    Route::post('/bukuBesar/insert', [BukuBesarController::class, 'insert']);
-    Route::post('/bukuBesar/update/{id}', [BukuBesarController::class, 'update']);
+    Route::get('/bukubesar', [BukuBesarController::class, 'index']);
+    Route::get('/bukubesar/edit/{id}', [BukuBesarController::class, 'edit']);
+    Route::post('/bukubesar/insert', [BukuBesarController::class, 'insert']);
+    Route::post('/bukubesar/update/{id}', [BukuBesarController::class, 'update']);
     Route::get('/dataSJ/{status}/{id}', [SuratJalanController::class, 'status']);
 
 
@@ -304,7 +304,7 @@ Route::group(['middleware' => 'auth', 'verified'], function () {
 
     Route::get('/cash-opnem', [CashOpnameController::class, 'data']);
     Route::post('/cash-opnem/update', [CashOpnameController::class, 'update']);
-   
+
 
 
     Route::get('/cash-opnem/print', [CashOpnameController::class, 'print']);

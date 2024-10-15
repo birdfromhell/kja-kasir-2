@@ -90,7 +90,7 @@ class UsersRepository
                 // dd($credentials);
                 if (Auth::attempt($credentials)) {
                     $request->session()->regenerate();
-                    return redirect()->route('verification.notice')->with('success', );
+                    return redirect()->route('verification.notice')->with('success', 'Registrasi sukses, silahkan verifikasi email');
                 } else {
                     return back()->with('error', 'Terjadi Kesalahan');
                 }
@@ -217,7 +217,7 @@ class UsersRepository
     public function changePassword(Request $request, $validateData)
     {
         try {
-            // Validate the input data
+            // Validate the input data            
             $user = auth()->user();
 
             if (Hash::check($validateData['oldPassword'], $user->password)) {

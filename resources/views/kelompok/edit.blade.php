@@ -1,106 +1,66 @@
 @extends('layout.app')
-
 @section('content')
-<div class="container-fluid">
-    <div class="nk-content-inner">
-        <div class="nk-content-body">
-            <div class="components-preview wide-md mx-auto">
-                <div class="nk-block-head nk-block-head-lg wide-sm">
-                    <div class="nk-block-head-content">
-                        <div class="nk-block-head-sub">
-                            <a class="back-to" href="{{ url('/app/kelompok') }}">
-                                <em class="icon ni ni-arrow-left"></em>
-                                <span>Back to Kelompok</span>
-                            </a>
-                        </div>
-                        <div class="nk-block-des"></div>
+    <div id="content-page" class="content-page" style="margin-top: 75px">
+        <div class="container-fluid">
+            <div class="iq-card">
+                <div class="iq-card-header d-flex justify-content-between">
+                     <div class="iq-header-title">
+                        <h4 class="card-title">Edit Kelompok</h4>
                     </div>
-                </div><!-- .nk-block-head -->
-                <div class="nk-block nk-block-lg">
-                    <div class="card card-bordered">
-                        <div class="card-inner">
-                            @if (session('error'))
-                                <div class="alert text-white bg-primary" role="alert">
-                                    <div class="iq-alert-text">{!! session('error') !!}</div>
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <i class="ri-close-line"></i>
-                                    </button>
-                                </div>
-                            @endif
-                            <form class="form-validate" id="formUpdateKelompok" action="{{ url('/kelompok-update/' . $kelompok->id) }}" method="POST">
-                                @csrf
-                                @method('PUT') <!-- Pastikan ini menggunakan PUT -->
-                                <div class="row g-gs">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label" for="kode_kategori">Kode Kategori</label>
-                                            <div class="form-control-wrap">
-                                                <input type="text" class="form-control" id="kode_kategori" name="kode_kategori" placeholder="Masukkan Kode Kategori" value="{{ $kelompok->kode_kategori }}" required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label" for="kelompok_barang">Kelompok Barang</label>
-                                            <div class="form-control-wrap">
-                                                <input type="text" class="form-control" id="kelompok_barang" name="kelompok_barang" placeholder="Masukkan Kelompok Barang" value="{{ $kelompok->kelompok_barang }}" required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <button type="button" class="btn btn-primary" id="btnUpdateKelompok">Update</button>
-                                            <button type="reset" class="btn btn-danger">Reset</button>
-                                            <a href="{{ url('/app/kelompok') }}" class="btn btn-secondary">Kembali</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+                </div>
+                <div class="iq-card-body">
+                    <form id="formUpdateKelompok" class="form-horizontal" action="{{ url('/kelompok-update/' . $kelompokData->id) }}" method="POST">
+                        @csrf
+                        @method('POST')
+                        <div class="form-group row">
+                            <label class="control-label col-sm-2 align-self-center mb-0" for="email">Kode
+                                Kategori:</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="kode_kategori" name="kode_kategori" required>
+                                    @foreach ($kategoriData as $item)
+                                        <option value="{{ $item->kode_kategori }}" {{ $item->kode_kategori == $kelompokData->kode_kategori ? 'selected' : '' }}>
+                                            {{ $item->kode_kategori }} - {{ $item->kategori_barang }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                    </div><!-- .nk-block -->
+                        <div class="form-group row">
+                            <label class="control-label col-sm-2 align-self-center mb-0" for="email">Kelompok
+                                Barang:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="kelompok_barang" name="kelompok_barang"
+                                       placeholder="Masukkan Kategori Barang" value="{{ $kelompokData->kelompok_barang }}" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" id="btnUpdateKelompok" class="btn btn-primary">Update</button>
+                            <button type="reset" class="btn iq-bg-danger">Reset</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-    $(document).ready(function() {
-        $('#btnUpdateKelompok').click(function() {
-            Swal.fire({
-                title: "Do you want to save the changes?",
-                showCancelButton: true,
-                confirmButtonText: "Confirm",
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: $("#formUpdateKelompok").attr('action'),
-                        type: "POST",
-                        data: $("#formUpdateKelompok").serialize(),
-                        success: function(response) {
-                            Swal.fire({
-                                title: 'Success',
-                                icon: 'success',
-                                text: 'Kelompok berhasil diperbarui!',
-                            }).then(() => {
-                                window.location.href = '{{ url('/app/kelompok') }}'; // Redirect setelah sukses
-                            });
-                        },
-                        error: function(xhr) {
-                            let errorMessage = 'Gagal memperbarui kelompok.';
-                            if (xhr.status === 422) {
-                                errorMessage = xhr.responseJSON.message || 'Ada kesalahan dalam input data.';
-                            }
-                            Swal.fire({
-                                title: 'Error',
-                                text: errorMessage,
-                                icon: 'error'
-                            });
-                        }
-                    });
-                }
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#btnUpdateKelompok").click(function(event) {
+                event.preventDefault();
+                Swal.fire({
+                    title: "Do you want to update the data?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Update",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $("#formUpdateKelompok").submit();
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
 @endsection
